@@ -1,5 +1,5 @@
 # Project Description
-Ackee Vault - Stora your SOL in Different vaults securely
+Ackee Vault - Store your SOL in Different vaults securely
 
 ![](ackee_vault1.jpg)
 
@@ -20,7 +20,7 @@ Another user cannot deposit or withdraw from other users vault. This dApp demons
 - **Mutiple Vaults for a User** : User can create multiple vaults by using different vault ID
 - **Deposit Lamports**: Add lamports to your chosen vaults. All user vaults are shown in UI.
 - **Withdraw Lamports**: User can withdraw lamports from chosed vault.
-- **Close Vault Account**: Close the vault to recover the rent amount. Vault accont will be closed and removed from UI.
+- **Close Vault Account**: Close the vault to recover lamports and the rent amount. Vault accont will be closed and removed from UI.
 
 ![](ackee_vault2.jpg)
 
@@ -33,29 +33,30 @@ Another user cannot deposit or withdraw from other users vault. This dApp demons
 
 ## Program Architecture
 ![Archetecture](Vault_arch1.jpg)
-The Counter dApp uses a simple architecture with one main account type and three core instructions. The program leverages PDAs to create unique counter accounts for each user, ensuring data isolation and preventing conflicts between different users' counters.
+The Ackee Vault dApp uses a simple architecture with two PDA account(Vault State, Vault) type and four core instructions(Initialize, Deposit, Withdraw, Close). The program leverages PDAs to create Vault accounts for each user which can be operated by User only creating vaults, ensuring data isolation and preventing loss of lamports due to unauthorized access.
 
 ### PDA Usage
 ![vault PDA](Vault_arch_PDA.jpg)
 The program uses Program Derived Addresses to create deterministic counter accounts for each user.
 
 **PDAs Used:**
-- **Counter PDA**: Derived from seeds `["counter", user_wallet_pubkey]` - ensures each user has a unique counter account that only they can modify
+- **Vault State PDA**: Derived from seeds `["vault_state", user, vault_id]` - ensures each user has a unique vault account for each vauld_id that only they can modify.
 
 ### Program Instructions
 **Instructions Implemented:**
-- **Initialize**: Creates a new counter account for the user with initial value of 0
-- **Increment**: Increases the counter value by 1 and tracks total increments
-- **Reset**: Sets the counter value back to 0 while preserving the owner information
+- **Initialize**: Creates a new vault.
+- **Deposit**: Deposit lamports in selected vault.
+- **Withdraw**: Withdraw lamports from selected vault.
+- **Close Vault**: close vault account and transfer rent & lamports back to user.
 
 ### Account Structure
 ```rust
 #[account]
-pub struct Counter {
-    pub owner: Pubkey,        // The wallet that owns this counter
-    pub count: u64,           // Current counter value
-    pub total_increments: u64, // Total number of times incremented (persists through resets)
-    pub created_at: i64,      // Unix timestamp when counter was created
+#[derive(InitSpace)]
+pub struct VaultState {
+    pub vault_id: u16,
+    pub vault_bump: u8,
+    pub state_bump: u8,
 }
 ```
 
@@ -65,15 +66,17 @@ pub struct Counter {
 Comprehensive test suite covering all instructions with both successful operations and error conditions to ensure program security and reliability.
 
 **Happy Path Tests:**
-- **Initialize Counter**: Successfully creates a new counter account with correct initial values
-- **Increment Counter**: Properly increases count and total_increments by 1
-- **Reset Counter**: Sets count to 0 while preserving owner and total_increments
+- **Initialize Vault**: Successfully creates a new counter account with correct initial values
+- **Deposit**: Properly increases count and total_increments by 1
+- **Withdraw**: Sets count to 0 while preserving owner and total_increments
+- **Close Vault**: Sets count to 0 while preserving owner and total_increments
 
 **Unhappy Path Tests:**
-- **Initialize Duplicate**: Fails when trying to initialize a counter that already exists
-- **Increment Unauthorized**: Fails when non-owner tries to increment someone else's counter
-- **Reset Unauthorized**: Fails when non-owner tries to reset someone else's counter
-- **Account Not Found**: Fails when trying to operate on non-existent counter
+- **Initialize Duplicate Vault**: Fails when trying to initialize a Vault with Id that already exists
+- **Deposit in Others Vault**: Fails when non-owner tries to Deposit in someone else's Vault
+- **Withdraw Unauthorized**: Fails when non-owner tries to withdraw from others vault.
+- **Close other's vault**: Fails when trying to close someone else's Vault
+- **Account Not Found**: Fails when trying to operate on non-existent Vault
 
 ### Running Tests
 ```bash
@@ -81,6 +84,4 @@ yarn install    # install dependencies
 anchor test     # run tests
 ```
 
-### Additional Notes for Evaluators
 
-This was my first Solana dApp and the learning curve was steep! The biggest challenges were figuring out account ownership validation (kept getting unauthorized errors) and dealing with async transaction confirmations. PDAs were confusing at first but once they clicked, the deterministic addressing made everything much cleaner.
