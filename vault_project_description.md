@@ -32,9 +32,11 @@ Another user cannot deposit or withdraw from other users vault. This dApp demons
 5. **Close Vault** - Press close button to closed Vault account.
 
 ## Program Architecture
+![Archetecture](Vault_arch1.jpg)
 The Counter dApp uses a simple architecture with one main account type and three core instructions. The program leverages PDAs to create unique counter accounts for each user, ensuring data isolation and preventing conflicts between different users' counters.
 
 ### PDA Usage
+![vault PDA](Vault_arch_PDA.jpg)
 The program uses Program Derived Addresses to create deterministic counter accounts for each user.
 
 **PDAs Used:**
@@ -58,7 +60,7 @@ pub struct Counter {
 ```
 
 ## Testing
-
+![Data Flow](Vault_arch_DFD.jpg)
 ### Test Coverage
 Comprehensive test suite covering all instructions with both successful operations and error conditions to ensure program security and reliability.
 
