@@ -5,18 +5,17 @@ package_manager = "yarn"
 resolution = true
 skip-lint = false
 
-[programs.localnet]
-ackee_vault = "7PYJ7H51HoJzShYJtjGdm91ARgCcsXwK7sjiGreVnwwL"
-
 [programs.devnet]
-ackee_vault = "7PYJ7H51HoJzShYJtjGdm91ARgCcsXwK7sjiGreVnwwL"
+ackee_vault = "ADZAwRZ1L3w2yyXjF32JFMaGrmXR34u5TahdWUHDmNPt"
+
+[programs.localnet]
+ackee_vault = "ADZAwRZ1L3w2yyXjF32JFMaGrmXR34u5TahdWUHDmNPt"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-#cluster = "localnet"
-cluster = "devnet"
+cluster = "localnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]

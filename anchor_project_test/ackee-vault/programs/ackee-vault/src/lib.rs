@@ -9,7 +9,7 @@ pub use constants::*;
 pub use instructions::*;
 pub use state::*;
 
-declare_id!("7PYJ7H51HoJzShYJtjGdm91ARgCcsXwK7sjiGreVnwwL");
+declare_id!("ADZAwRZ1L3w2yyXjF32JFMaGrmXR34u5TahdWUHDmNPt");
 
 #[program]
 pub mod ackee_vault {
