@@ -72,11 +72,11 @@ Comprehensive test suite covering all instructions with both successful operatio
 - **Close Vault**: Sets count to 0 while preserving owner and total_increments
 
 **Unhappy Path Tests:**
-- **Initialize Duplicate Vault**: Fails when trying to initialize a Vault with Id that already exists
+- **Initialize Duplicate Vault**: Fails to initialize a Vault with Id that already exists
 - **Deposit in Others Vault**: Fails when non-owner tries to Deposit in someone else's Vault
 - **Withdraw Unauthorized**: Fails when non-owner tries to withdraw from others vault.
 - **Close other's vault**: Fails when trying to close someone else's Vault
-- **Account Not Found**: Fails when trying to operate on non-existent Vault
+
 
 ### Running Tests
 ```bash
